@@ -10,7 +10,7 @@ import java.util.Random;
 public class Bomber extends Jouable {
 
     int explo = 200;
-    LinkedList<Jouable> cible_zone; //liste des joueurs ciblés par les dégats de zone
+    LinkedList<Jouable> cible_zone; //liste des joueurs ciblÃ©s par les dÃ©gats de zone
     public int sens = 1;
     private ImageIcon icoFond;
     private Image imgFond;
@@ -19,7 +19,7 @@ public class Bomber extends Jouable {
 
     Bomber(int x1,int y1){
         super(320,320,x1, y1,202,20*UNIT_SIZE,true,true,false, 1800, true);
-        this.setPreferredSize(new Dimension(80,40)); //nombre total de carrés
+        this.setPreferredSize(new Dimension(80,40)); //nombre total de carrÃ©s
         //this.setBackground(Color.white);
         icoFond = new ImageIcon(getClass().getResource("/images/bomber.png"));
         this.imgFond = this.icoFond.getImage();
@@ -29,9 +29,9 @@ public class Bomber extends Jouable {
     }
 
     public void radar(LinkedList<Jouable> list_perso, LinkedList<Jouable> list_tours) {
-        //cette méthode détermine où est le jouable le plus proche
+        //cette mÃ©thode dÃ©termine oÃ¹ est le jouable le plus proche
         double r = 1800;
-        //on commence par déterminer la tour la plus proche
+        //on commence par dÃ©terminer la tour la plus proche
         if (y < 360) {
             //si le perso est sur la partie haute du terrain
             if(list_tours.get(0).x != list_tours.get(2).x) {
@@ -61,7 +61,7 @@ public class Bomber extends Jouable {
 
             }
         }
-        //puis on détermine le joueur le plus proche s'il y en a un
+        //puis on dÃ©termine le joueur le plus proche s'il y en a un
         for(Jouable perso : list_perso) {
             double rp = Math.sqrt(Math.pow(perso.x -this.x,2)+Math.pow(perso.y -this.y,2));
             if(rp<=r) {
@@ -100,9 +100,9 @@ public class Bomber extends Jouable {
 
     public void brain() {
         //A PRIORI ELLE FONCTIONNE
-        //cette méthode définit dans quel sens le bomber doit bouger
+        //cette mÃ©thode dÃ©finit dans quel sens le bomber doit bouger
         //sens = 1 : droite, sens =2 : gauche, sens = 3 : bas, sens = 4 : haut
-        //d'abord il avance sur l'axe x, puis sur l'axe y, puis il se stoppe quand on est à la bonne portée
+        //d'abord il avance sur l'axe x, puis sur l'axe y, puis il se stoppe quand on est Ã  la bonne portÃ©e
         double r = Math.sqrt(Math.pow(cible.x-this.x, 2)+Math.pow(cible.y-this.y, 2));
         System.out.println("le r vaut: "+ r);
         if(this.pas == 1){
@@ -110,10 +110,15 @@ public class Bomber extends Jouable {
         }else{
             this.pas = 1;
         }
-        if(r<=this.portée) {
+        if(r<=this.portÃ©e) {
             //le bomber est capable de tirer, donc il ne bouge plus
             this.sens = 0;
-            this.pas = 0;
+            this.pas = -1;
+            if(this.pas == -1){
+                this.pas = 0;
+            }else{
+                this.pas = -1;
+            }
             this.tir(cible);
             System.out.println(cible_zone.toString());
             for(Jouable cible2 : cible_zone) {
@@ -151,7 +156,7 @@ public class Bomber extends Jouable {
             this.y = this.y -3*UNIT_SIZE/2;
             //this.sens = 1;
         }
-        System.out.println("je suis censé avancer");
+        System.out.println("je suis censÃ© avancer");
         System.out.println("le sens vaut: "+sens);
     }
 
@@ -160,6 +165,10 @@ public class Bomber extends Jouable {
         if(this.pv >0) {
             if(which_player==true){
                 if(this.pas == 0){ // attack image of player 1
+                    icoFond = new ImageIcon(getClass().getResource("/images/bomberattack1.2.png"));
+                    this.imgFond = this.icoFond.getImage();
+                    g.drawImage(this.imgFond, x, y, 132, 157, null);
+                }else if(this.pas == -1){ // walking image 1 of player 1
                     icoFond = new ImageIcon(getClass().getResource("/images/bomberattack1.1.png"));
                     this.imgFond = this.icoFond.getImage();
                     g.drawImage(this.imgFond, x, y, 132, 157, null);
@@ -174,6 +183,10 @@ public class Bomber extends Jouable {
                 }
             }else{
                 if(this.pas == 0){ // attack image of player 2
+                    icoFond = new ImageIcon(getClass().getResource("/images/bomberattack2.2.png"));
+                    this.imgFond = this.icoFond.getImage();
+                    g.drawImage(this.imgFond, x, y, 132, 157, null);
+                }else if(this.pas == -1){ // walking image 1 of player 2
                     icoFond = new ImageIcon(getClass().getResource("/images/bomberattack2.1.png"));
                     this.imgFond = this.icoFond.getImage();
                     g.drawImage(this.imgFond, x, y, 132, 157, null);
@@ -206,7 +219,7 @@ public class Bomber extends Jouable {
     }
 
     public String toString() {
-        return "je suis un bomber, mes coordonées : " + this.x +", " +this.y;
+        return "je suis un bomber, mes coordonÃ©es : " + this.x +", " +this.y;
     }
 
     public void draw_card(Graphics g) {
